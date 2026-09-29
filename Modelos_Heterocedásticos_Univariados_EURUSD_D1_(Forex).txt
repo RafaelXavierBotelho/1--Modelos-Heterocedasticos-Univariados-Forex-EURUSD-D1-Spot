@@ -93,7 +93,7 @@ from scipy.stats import genpareto
 
 #  ========== Webscrapping the data using alpha_vantage library ==========
 
-api_key = 'L3BO31L8GVU3J9EU'
+api_key = 'Your API key here'
 
 url = (
     "https://www.alphavantage.co/query?"
