@@ -1,6 +1,76 @@
+Framework Quantitativo Bayesiano Avançado para Previsão Financeira e Execução em Microestrutura
+Visão Geral:
+
+Este repositório implementa um Framework híbrido de Espaço de Estados Bayesiano e Volatilidade Estocástica (SV) projetado para modelar dinâmicas complexas, heteroscedásticas e variantes no tempo em séries de preços financeiros de alta frequência/diárias (especificamente EUR/USD). Ao sintetizar a inferência por Monte Carlo Hamiltoniano (HMC) via Stan, Transições de Estados Não-Lineares (UKF / GRU / LSTM) e uma camada de decisão institucional de Conceitos de Smart Money (SMC) e Price Action, este projeto preenche a lacuna entre a modelagem estocástica macroeconômica e a execução em microestrutura baseada no fluxo de ordens (order-flow).
+Principais Características Arquiteturais:
+
+    Volatilidade Estocástica Bayesiana e Dinâmica de Estados Latentes (Regimes de Markov-Switching - HMM): Alterna entre regimes de mercado em tendência e consolidados/scalping, modulando dinamicamente a persistência do momentum, a sensibilidade à liquidez e os parâmetros de reversão à média.
+
+    Força de Restauração OU Não-Linear: Implementa um processo de reversão à média de Ornstein-Uhlenbeck (OU) dependente do estado, que atrai o preço em direção a um atrator EMA adaptativo durante regimes de consolidação (range-bound), permanecendo inativo durante tendências estruturais.
+
+    Componente de Volatilidade Híbrida: Combina estruturas de volatilidade do tipo HAR, inovações GJR-GARCH, dinâmicas de eventos de notícias macroeconômicas e mecanismos de salto-difusão (jump-diffusion) para modelar a heteroscedasticidade e o risco de cauda (tail risk).
+
+    Memória Sequencial Profunda: Injeta memória temporal não-linear utilizando arquiteturas LSTM de Quase-Momentum e GRU Bidirecional na função de transição de estado.
+
+Camada de Decisão em Níveis (Hierarquia de Sinais SMC e Microestrutura)
+
+Em vez de confiar puramente em previsões estatísticas irrestritas, as distribuições t-Student preditivas são mapeadas em uma hierarquia de sinais em níveis regida por regras:
+Nível 1 (Gatilhos de Prioridade Determinística):
+
+Eventos institucionais de alta convicção — como Varreduras de Liquidez (Liquidity Sweeps), Contagens de Exaustão em Big Figures de Múltiplos Toques (3 testes) e Mitigações de Blocos de Ordens (Order Blocks) com Deslocamento de Volume — sobrepõem-se às previsões da linha de base para impor entradas direcionais assertivas.
+Nível 2 (Integração Logit Contínua):
+
+Na ausência de gatilhos do Nível 1, o modelo recorre a uma camada de decisão contínua que combina métricas proxy de Fluxo de Ordens (Confluências de CVD e RSI) com um Sistema Quantitativo de Pontuação de Price Action (Fair Value Gaps, Rompimentos Estruturais, Geometrias de Doji).
+
+[ Amostragem Posterior MCMC / HMC ]
+                   │
+         [ Parser SMC & Microestrutura ]
+                   │
+   ┌───────────────┴───────────────┐
+   ▼                               ▼
+┌───────────────────────────┐   ┌───────────────────────────┐
+│  NÍVEL 1: DETERMINÍSTICO  │   │  NÍVEL 2: PROBABILÍSTICO  │
+│  GATILHOS INSTITUCIONAIS  │   │   FALLBACK CONTÍNUO       │
+└────────────┬──────────────┘   └─────────────┬─────────────┘
+             │                                │
+• Varredura de Liquidez (Turtle Soup)         • Confluências CVD / RSI
+• Testes de Big Figure >= 3                   • Pontuação Líquida de Price Action
+• Order Block + Deslocamento                  • Decisão em Espaço Logit
+             │                                │
+             └───────────────┬────────────────┘
+                             │
+                  [ Direcional Unificado ]
+                  [   Alvo & Risco (SL)  ]
+
+A lucratividade passada não garante resultados futuros.
+
+    * Todas as estimativas geradas neste projeto destinam-se estritamente a fins educacionais.
+
+    * Sujeito a forte viés de ancoragem (Anchoring bias).
+
+AVISO LEGAL (DISCLAIMER):
+“Não me responsabilizo, de forma alguma, por quaisquer ganhos e/ou perdas em que você possa incorrer caso utilize estes modelos para operações de trading... Exclusivamente para fins educacionais.”
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Advanced Bayesian Quantitative Framework for Financial Forecasting & Microstructure Execution 
 
-OverviewThis repository implements a hybrid Bayesian State-Space & Stochastic Volatility (SV) Framework designed to model complex, heteroscedastic, 
+Overview : 
+
+This repository implements a hybrid Bayesian State-Space & Stochastic Volatility (SV) Framework designed to model complex, heteroscedastic, 
 and time-varying dynamics in high-frequency/daily financial price series (specifically EUR/USD).By synthesizing Hamiltonian Monte Carlo (HMC) inference via Stan,
 Non-Linear State Transitions (UKF / GRU / LSTM), and an Institutional Smart Money Concepts (SMC) & Price Action decision layer, this project bridges the gap 
 between macroeconomic stochastic modeling and order-flow microstructure execution.
